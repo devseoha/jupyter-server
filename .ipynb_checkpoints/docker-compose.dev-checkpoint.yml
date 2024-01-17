@@ -1,0 +1,25 @@
+version: '3'
+services:
+  jupyter:
+    image: jupyter/scipy-notebook
+    container_name: jupyter
+    environment:
+      - SQL_HOST=dev-db-conf-instance-1.cafwikb8kyif.ap-northeast-2.rds.amazonaws.com
+      - SQL_USER=dev_conf
+      - SQL_PASSWORD=conf1234!!
+      - DATABASE=mysql
+      - AWS_ACCESS_KEY_ID=AKIAZRL6SJQHSTLODP4W
+      - AWS_SECRET_ACCESS_KEY=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
+      - NODE_SERVER=https://dev-m-api.con-f.co.kr/
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./jupyter:/home/jovyan
+      - ./config.py:/home/libs/config.py
+    user: root
+    command: >
+      sh -c '
+        pip install awscli requests && \
+        pip install --no-cache-dir sqlalchemy ipython-sql pymysql  && \
+        start.sh jupyter lab --NotebookApp.token="conf" --ip="0.0.0.0" --port=8888
+      '
